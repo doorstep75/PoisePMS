@@ -25,7 +25,7 @@ public class Main {
 
             System.out.print("Please select an option: ");
 
-            int choice = getValidChoice(scanner, 0, 7); // get and validate the user's choice
+            int choice = getValidChoice(scanner, 0, 8); // get and validate the user's choice
 
             System.out.println();
 
@@ -54,6 +54,10 @@ public class Main {
                 case 7:
                     customersMenu(scanner); // and same for customers menu
                     break;
+                case 8:
+                    System.out.println("Finalise a project selected.");
+                    project.finaliseProject(scanner);  // Correctly calling the public method in Project.java
+                    break;
                 case 0:
                     System.out.println("Exiting program.");
                     scanner.close(); // close the scanner, exit the loop and the program
@@ -76,6 +80,7 @@ public class Main {
         System.out.println("5: Architects menu");
         System.out.println("6: Contractors menu");
         System.out.println("7: Customers menu");
+        System.out.println("8: Finalise a project");
         System.out.println("0: Exit");
         System.out.println();
     }

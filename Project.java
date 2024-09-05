@@ -66,7 +66,7 @@ public class Project {
                 updateProjectDetails(conn, projectNumber, projectName, buildingType, projectAddress, erfNumber,
                         totalFee, paidToDate, deadlineDate, completionDate, finalised,
                         architectId, contractorId, customerId);
-                System.out.println("Project updated successfully."); // output to user when details succesfully updated
+                System.out.println("Project updated successfully."); // output to user when details successfully updated
                 return; // to exit the update process
             }
         } catch (SQLException e) {
@@ -219,6 +219,68 @@ public class Project {
             System.out.println("Database connection error: " + e.getMessage());
         }
     }
+
+    /**
+     * Finalises a project by asking the user for the project number and updating its status in the database.
+     * This method will handle user input via the scanner and then call the existing
+     * finaliseProject(Connection conn, int projectNumber) method.
+     *
+     * @param scanner Scanner object to read user input.
+     */
+    public void finaliseProject(Scanner scanner) {
+        try (Connection conn = DatabaseConnection.getConnection()) { // Get the database connection
+            while (true) {
+                System.out.print("Enter Project Number to finalise (or 0 to return to the main menu): ");
+                String input = scanner.nextLine(); // Get project number input
+
+                // Allow the user to return to the main menu
+                if ("0".equals(input)) {
+                    System.out.println("Returning to the main menu.");
+                    return;
+                }
+
+                int projectNumber;
+                try {
+                    projectNumber = Integer.parseInt(input); // Convert input to an integer
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid entry. Project numbers must be numeric. Please try again.");
+                    continue; // Prompt again if input is invalid
+                }
+
+                // Check if the project exists in the database
+                if (doesProjectNumberExist(conn, projectNumber)) {
+                    // Call the existing method to finalise the project
+                    finaliseProject(conn, projectNumber);
+                    System.out.println("Project number " + projectNumber + " has been finalised.");
+                    return; // Exit after finalising the project
+                } else {
+                    System.out.println("Project number not found. Please try again or press 0 to return.");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Database connection error: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Finalises a project by updating its finalised status in the database.
+     *
+     * @param conn          Connection to the database.
+     * @param projectNumber The project number to finalise.
+     * @throws SQLException If an SQL error occurs.
+     */
+    public void finaliseProject(Connection conn, int projectNumber) throws SQLException {
+        String sql = "UPDATE projects SET finalised = TRUE WHERE project_number = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, projectNumber);
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected == 0) {
+                System.out.println("No changes were made. The project may already be finalised.");
+            }
+        }
+    }
+
 
     /**
      * Checks if a project number exists in the database.
