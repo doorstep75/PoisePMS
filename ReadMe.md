@@ -44,6 +44,7 @@ PoisePMS is a project management system designed to help manage construction pro
 1. **Main Menu**:
    - From the main menu, select options to manage projects, architects, contractors, or customers.
    - Choose to add, update, delete, or search records as required.
+   - There is also the function to finalise any existing projects (option 8 on main menu).
 
 2. **Project Search**:
    - Use the project search menu to find projects by name or number, or to list all projects, incomplete projects, or those beyond the deadline.
